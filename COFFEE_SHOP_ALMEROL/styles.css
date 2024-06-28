@@ -1,0 +1,240 @@
+body {
+    background-color: #FFFFCC;
+    color: #330000;
+    font-family: Verdana;
+    margin: 0;
+    padding: 0;
+    background-image: url('images/coffee-bkg.png');
+}
+
+#container {
+    margin: 20px auto;
+    max-width: 950px;
+    border-style: solid;
+    padding: 0px;
+    overflow: hidden;
+}
+
+#logo {
+    background-color: #CCAA66;
+    text-align: center;
+    text-shadow: 2px 2px 4px #F1E8B0;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    height: 80px;
+    margin: 0px;
+}
+
+#logo h1 {
+    font-size: 32px;
+}
+
+#nav-container {
+    font-size: 20px;
+    background-color: #E8D882;
+    padding-left: 20px;
+    border-right: 1px solid;
+    width: 130px;
+    height: 1447px;
+    float: left;
+    position: relative;
+    z-index: 1; /* Ensure the navigation container stays above other content */
+}
+
+#nav-container a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+#nav-container a:hover {
+    color: #fff;
+    text-shadow: 2px 2px 4px black;
+}
+
+#image-container {
+    width: calc(100% - 151px); /* Adjusted width to account for the width of the nav-container */
+    height: 200px;
+    background-color: #F1E8B0;
+    overflow: hidden;
+    float: right; /* Float the image container to the right */
+}
+
+#image-container img {
+    width: 100%; /* Ensure the image fills the container */
+    height: auto; /* Maintain aspect ratio */
+}
+
+#home-content,
+#menu-content,
+#music-content,
+#jobs-content {
+    background-color: #F1E8B0;
+    padding: 20px;
+    overflow: hidden;
+    margin-left: 150px;
+}
+
+#music-content ul li {
+    margin-bottom: 5px; /* Adjust this value to control the spacing */
+}
+
+.img-content {
+    float: right; /* Float the image content to the right */
+    margin-right: 7%; /* Added margin for spacing */
+    margin-left: 8%;
+}
+
+#footer {
+    background-color: #CCAA66;
+    border-top-style: solid;
+    height: 62px;
+    text-align: center;
+    font-style: italic;
+    clear: both;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+    #container {
+        max-width: 992px;
+    }
+    
+    #logo {
+        height: 60px;
+    }
+
+    #logo h1 {
+        font-size: 28px;
+    }
+
+    #nav-container {
+        width: 120px;
+    }
+
+    #image-container {
+        width: calc(100% - 141px);
+    }
+
+    #home-content,
+    #menu-content,
+    #music-content,
+    #jobs-content {
+        margin-left: 140px;
+    }
+}
+
+@media (max-width: 992px) {
+    #container {
+        max-width: 768px;
+    }
+
+    #logo {
+        height: 50px;
+    }
+    
+    #logo h1 {
+        font-size: 24px;
+    }
+
+    #nav-container {
+        width: 110px;
+        height: 1747px;
+    }
+
+    #image-container {
+        width: calc(100% - 131px);
+    }
+
+    #home-content,
+    #menu-content,
+    #music-content,
+    #jobs-content {
+        margin-left: 130px;
+    }
+
+    /* Center the MenuPic when screen width is 992px or less */
+    #menu-content .center-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    #container {
+        max-width: 576px;
+    }
+    
+    #logo {
+        height: 40px;
+    }
+    
+    #logo h1 {
+        font-size: 20px;
+    }
+
+    #nav-container {
+        width: 100%;
+        height: auto;
+        float: none;
+        padding-left: 0;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #image-container {
+        width: 100%;
+        float: none;
+        height: 180px;
+    }
+
+    #home-content,
+    #menu-content,
+    #music-content,
+    #jobs-content {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    #nav-container {
+        width: 100%;
+        height: auto;
+        float: none;
+        padding-left: 0;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #image-container {
+        height: 140px;
+    }
+    
+    #home-content,
+    #menu-content,
+    #music-content,
+    #jobs-content {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-left: 0;
+    }
+	
+	    #home-content .center-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+		#music-content .center-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
