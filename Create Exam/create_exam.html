@@ -1,110 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <style>
-    </style>
+  </head>
+  <body>
     <section name="course_menu">
-        <h2>[Course Name]</h2>
-        <nav>
-            <a href="#">Course</a> | 
-            <a href="#">Settings</a> | 
-            <a href="#">Participants</a> | 
-            <a href="#">Grades</a> | 
-            <a href="#">Reports</a> | 
-            <a href="#">More</a>  
-        </nav>
+      <h2>[Course Name]</h2>
+      <nav>
+        <a href="#">Course</a> | <a href="#">Settings</a> |
+        <a href="#">Participants</a> | <a href="#">Grades</a> |
+        <a href="#">Reports</a> |
+        <a href="#">More</a>
+      </nav>
     </section>
+
+    <!-- Title -->
     <h1>New Quiz</h1>
-    <section class="general_settings">
-        <form>
-            <h2>General</h2>
-            <p>Name</p>
-            <input></input>
-            <p>Description</p>
-            <textarea></textarea>
-            <br>
-            <input type="checkbox" id="display_description" name="display_description" value="display_description">
-            <label>Display description on course page</label>
-        </form>
+
+    <!-- General -->
+    <section class="general">
+      <form>
+        <h2>General</h2>
+        <p>Name</p>
+        <input />
+        <p>Description</p>
+        <textarea></textarea>
+        <br />
+        <input
+          type="checkbox"
+          id="display_description"
+          name="display_description"
+          value="display_description"
+        />
+        <label>Display description on course page</label>
+      </form>
     </section>
-    <section class="Timing">
-        <form>
-            <h2>Timing</h2>
-            <p>Open the quiz</p>
-            <input type="checkbox" id="enable_open_quiz_timing" name="enable_open_quiz_timing">
-            <label>Enable</label>
-            <select name="open_quiz_day" id="open_quiz_day"></select>
-            <select name="open_quiz_month" id="open_quiz_month"></select>
-            <select name="open_quiz_year" id="open_quiz_year"></select>
-            <select name="open_quiz_hour" id="open_quiz_hour"></select>
-            <select name="open_quiz_minute" id="open_quiz_minute"></select>
-            <p>Close the quiz</p>
-            <input type="checkbox" id="enable_close_quiz_timing" name="enable_close_quiz_timing">
-            <label>Enable</label>
-            <select name="close_quiz_day" id="close_quiz_day"></select>
-            <select name="close_quiz_month" id="close_quiz_month"></select>
-            <select name="close_quiz_year" id="close_quiz_year"></select>
-            <select name="close_quiz_hour" id="close_quiz_hour"></select>
-            <select name="close_quiz_minute" id="close_quiz_minute"></select>
-            <p>Time limit</p>
-            <input type="text" name="time_limit_number" id="time_limit_number">
-            <select name="time_limit_type" id="time_limit_type"></select>
-            <input type="checkbox" id="enable_time_limit" name="enable_time_limit">
-            <label>Enable</label>
-            <p>When time expires</p>
-            <select name="time_limit_expire" id="time_limit_expire"></select>
-        </form>
+
+    <!-- Timing -->
+    <section class="timing">
+      <form>
+        <h2>Timing</h2>
+        <p>Open the quiz</p>
+        <input
+          type="checkbox"
+          id="enable_open_quiz_timing"
+          name="enable_open_quiz_timing"
+        />
+        <label>Enable</label>
+        <select name="open_quiz_day" id="open_quiz_day"></select>
+        <select name="open_quiz_month" id="open_quiz_month"></select>
+        <select name="open_quiz_year" id="open_quiz_year"></select>
+        <select name="open_quiz_hour" id="open_quiz_hour"></select>
+        <select name="open_quiz_minute" id="open_quiz_minute"></select>
+        <p>Close the quiz</p>
+        <input
+          type="checkbox"
+          id="enable_close_quiz_timing"
+          name="enable_close_quiz_timing"
+        />
+        <label>Enable</label>
+        <select name="close_quiz_day" id="close_quiz_day"></select>
+        <select name="close_quiz_month" id="close_quiz_month"></select>
+        <select name="close_quiz_year" id="close_quiz_year"></select>
+        <select name="close_quiz_hour" id="close_quiz_hour"></select>
+        <select name="close_quiz_minute" id="close_quiz_minute"></select>
+        <p>Time limit</p>
+        <input type="text" name="time_limit_number" id="time_limit_number" />
+        <select name="time_limit_type" id="time_limit_type"></select>
+        <input
+          type="checkbox"
+          id="enable_time_limit"
+          name="enable_time_limit"
+        />
+        <label>Enable</label>
+        <p>When time expires</p>
+        <select name="time_limit_expire" id="time_limit_expire"></select>
+      </form>
     </section>
-    
-    <script>
-        const days = Array.from({ length: 31 }, (_, i) => i + 1);
-        const months = [
-            "January", "February", "March", "April", "May", "June", 
-            "July", "August", "September", "October", "November", "December"
-        ];
-        const years = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - 50 + i);
-        const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-        const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
-        const time_limit_type = [
-            "weeks", "days", "hours", "minutes","seconds"
-        ];
-        const time_limit_expire = ["Open attempts are submitted automatically", "Attempts must be submitted before time expires, or they are not counted"];
 
-        function populateSelect(selectId, values, defaultValue) {
-            const select = document.getElementById(selectId);
-            values.forEach(value => {
-                const option = document.createElement("option");
-                option.value = value;
-                option.textContent = value;
-                if (value === defaultValue) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
-        }
+    <!-- Grade -->
+    <section name="grade">
+      <form>
+        <h2>Grade</h2>
+        <p>Grade category</p>
+        <select name="grade_category" id="grade_category"></select>
+        <p>Grade to pass</p>
+        <input type="text" id="grade_to_pass"/>
+        <p>Attempts allowed</p>
+        <select name="grade_attempts" id="grade_attempts"></select>
+        <p>Grading method</p>
+        <select name="grading_method" id="grading_method"></select>
+      </form>
+    </section>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentDate = new Date();
-
-            populateSelect("open_quiz_day", days, currentDate.getDate());
-            populateSelect("open_quiz_month", months, months[currentDate.getMonth()]);
-            populateSelect("open_quiz_year", years, currentDate.getFullYear());
-            populateSelect("open_quiz_hour", hours, currentDate.getHours().toString().padStart(2, '0'));
-            populateSelect("open_quiz_minute", minutes, currentDate.getMinutes().toString().padStart(2, '0'));
-
-            populateSelect("close_quiz_day", days, currentDate.getDate());
-            populateSelect("close_quiz_month", months, months[currentDate.getMonth()]);
-            populateSelect("close_quiz_year", years, currentDate.getFullYear());
-            populateSelect("close_quiz_hour", hours, currentDate.getHours().toString().padStart(2, '0'));
-            populateSelect("close_quiz_minute", minutes, currentDate.getMinutes().toString().padStart(2, '0'));
-            populateSelect("time_limit_type", time_limit_type);
-            populateSelect("time_limit_expire", time_limit_expire);
-        });
-    </script>
-</body>
+    <!-- Script -->
+    <script src="script.js"></script>
+  </body>
 </html>
