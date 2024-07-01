@@ -38,10 +38,6 @@
         <button type="button" onclick="addQuestion()">Add Question</button>
         <button type="button" onclick="createAssessment()">Save Assessment</button>
     </form>
-
-    <h2>Assessment Preview</h2>
-    <div id="assessment-preview"></div>
-
     <script>
         let questionCount = 0;
 
@@ -126,24 +122,6 @@
 
             const result = await response.text();
             alert(result);
-
-            // Update preview
-            const assessmentPreview = document.getElementById('assessment-preview');
-            assessmentPreview.innerHTML = `<h3>${assessmentName}</h3>`;
-
-            assessmentData.questions.forEach((question, index) => {
-                let optionsList = '';
-                question.options.forEach(option => {
-                    optionsList += `<li>${option}</li>`;
-                });
-
-                assessmentPreview.innerHTML += `
-                    <p><strong>Question ${index + 1}:</strong> ${question.text}</p>
-                    <ol>${optionsList}</ol>
-                    <p><strong>Correct Answer:</strong> Option ${question.correctAnswer}</p>
-                    <hr>
-                `;
-            });
         }
     </script>
 </body>
