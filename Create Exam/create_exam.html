@@ -7,14 +7,14 @@
   </head>
   <body>
     <style>
-      fieldset{
+      fieldset {
         border-style: none;
         border-bottom: solid;
         border-color: rgb(222, 226, 230);
         border-width: 2px;
       }
     </style>
-    
+
     <div name="course_menu">
       <h1>Course Name</h1>
       <nav>
@@ -28,88 +28,100 @@
     <!-- Title -->
     <h1>New Quiz</h1>
 
-    <!-- General -->
-    <fieldset>
-      <section class="general">
-        <form>
-          <button>Show/Hide</button>
-          <h2>General</h2>
-          <p>Name</p>
-          <input />
-          <p>Description</p>
-          <textarea></textarea>
-          <br />
-          <input
-            type="checkbox"
-            id="display_description"
-            name="display_description"
-            value="display_description"
-          />
-          <label>Display description on course page</label>
-        </form>
-      </section>
-    </fieldset>
+    <form autocomplete="off">
 
-    <!-- Timing -->
-    <fieldset>
-      <section class="timing">
-        <form>
-          <h2>Timing</h2>
-          <p>Open the quiz</p>
-          <input
-            type="checkbox"
-            id="enable_open_quiz_timing"
-            name="enable_open_quiz_timing"
-          />
-          <label>Enable</label>
-          <select name="open_quiz_day" id="open_quiz_day"></select>
-          <select name="open_quiz_month" id="open_quiz_month"></select>
-          <select name="open_quiz_year" id="open_quiz_year"></select>
-          <select name="open_quiz_hour" id="open_quiz_hour"></select>
-          <select name="open_quiz_minute" id="open_quiz_minute"></select>
-          <p>Close the quiz</p>
-          <input
-            type="checkbox"
-            id="enable_close_quiz_timing"
-            name="enable_close_quiz_timing"
-          />
-          <label>Enable</label>
-          <select name="close_quiz_day" id="close_quiz_day"></select>
-          <select name="close_quiz_month" id="close_quiz_month"></select>
-          <select name="close_quiz_year" id="close_quiz_year"></select>
-          <select name="close_quiz_hour" id="close_quiz_hour"></select>
-          <select name="close_quiz_minute" id="close_quiz_minute"></select>
-          <p>Time limit</p>
-          <input type="text" name="time_limit_number" id="time_limit_number" />
-          <select name="time_limit_type" id="time_limit_type"></select>
-          <input
-            type="checkbox"
-            id="enable_time_limit"
-            name="enable_time_limit"
-          />
-          <label>Enable</label>
-          <p>When time expires</p>
-          <select name="time_limit_expire" id="time_limit_expire"></select>
-        </form>
-      </section>
-    </fieldset>
+      <div class="collapsible_action">
+        <a id="collapse_sections" href="#">
+          <span>Collapse all</span>
+          <span>Expand all</span>
+        </a>
+      </div>
+      <!-- General -->
+      <fieldset id="general">
+        <section>
+          <form>
+            <h2>General</h2>
+            <p>Name</p>
+            <input />
+            <p>Description</p>
+            <textarea></textarea>
+            <br />
+            <input
+              type="checkbox"
+              id="display_description"
+              name="display_description"
+              value="display_description"
+            />
+            <label>Display description on course page</label>
+          </form>
+        </section>
+      </fieldset>
 
-    <!-- Grade -->
-    <fieldset>
-      <section name="grade">
-        <form>
-          <h2>Grade</h2>
-          <p>Grade category</p>
-          <select name="grade_category" id="grade_category"></select>
-          <p>Grade to pass</p>
-          <input type="text" id="grade_to_pass" />
-          <p>Attempts allowed</p>
-          <select name="grade_attempts" id="grade_attempts"></select>
-          <p>Grading method</p>
-          <select name="grading_method" id="grading_method"></select>
-        </form>
-      </section>
-    </fieldset>
+      <!-- Timing -->
+      <fieldset>
+        <section class="timing">
+          <form>
+            <h2>Timing</h2>
+            <p>Open the quiz</p>
+            <input
+              type="checkbox"
+              id="enable_open_quiz_timing"
+              name="enable_open_quiz_timing"
+            />
+            <label>Enable</label>
+            <select name="open_quiz_day" id="open_quiz_day"></select>
+            <select name="open_quiz_month" id="open_quiz_month"></select>
+            <select name="open_quiz_year" id="open_quiz_year"></select>
+            <select name="open_quiz_hour" id="open_quiz_hour"></select>
+            <select name="open_quiz_minute" id="open_quiz_minute"></select>
+            <p>Close the quiz</p>
+            <input
+              type="checkbox"
+              id="enable_close_quiz_timing"
+              name="enable_close_quiz_timing"
+            />
+            <label>Enable</label>
+            <select name="close_quiz_day" id="close_quiz_day"></select>
+            <select name="close_quiz_month" id="close_quiz_month"></select>
+            <select name="close_quiz_year" id="close_quiz_year"></select>
+            <select name="close_quiz_hour" id="close_quiz_hour"></select>
+            <select name="close_quiz_minute" id="close_quiz_minute"></select>
+            <p>Time limit</p>
+            <input
+              type="text"
+              name="time_limit_number"
+              id="time_limit_number"
+            />
+            <select name="time_limit_type" id="time_limit_type"></select>
+            <input
+              type="checkbox"
+              id="enable_time_limit"
+              name="enable_time_limit"
+            />
+            <label>Enable</label>
+            <p>When time expires</p>
+            <select name="time_limit_expire" id="time_limit_expire"></select>
+          </form>
+        </section>
+      </fieldset>
+
+      <!-- Grade -->
+      <fieldset>
+        <section name="grade">
+          <form>
+            <h2>Grade</h2>
+            <p>Grade category</p>
+            <select name="grade_category" id="grade_category"></select>
+            <p>Grade to pass</p>
+            <input type="text" id="grade_to_pass" />
+            <p>Attempts allowed</p>
+            <select name="grade_attempts" id="grade_attempts"></select>
+            <p>Grading method</p>
+            <select name="grading_method" id="grading_method"></select>
+          </form>
+        </section>
+      </fieldset>
+    </form>
 
     <!-- Script -->
     <script src="script.js"></script>
