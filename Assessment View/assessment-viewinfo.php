@@ -26,8 +26,8 @@
         }
 
 
-        $subject_Code = "COMP 20053"; 
-        $assessment_ID= "A1115"; 
+        $subject_Code = "COMP 20054"; 
+        $assessment_ID= "A1116"; 
 
        
         $sql_select = "SELECT * FROM assessment WHERE subject_Code = '$subject_Code' AND assessment_ID = '$assessment_ID'";
@@ -37,7 +37,7 @@
         if ($result->num_rows > 0) {
             echo "<div class='assessment-list'>";
             while ($row = $result->fetch_assoc()) {
-                echo "<p>Assessment ID: " . $row["assessment_ID"] . "</p>";
+                echo "<p class='assessment_ID'>Assessment ID: " . $row["assessment_ID"] . "</p>";
                 echo "<div class='assessment-item'>";
                 echo "<h3>Subject Code: " . $row["subject_Code"] . "</h3>";
                 echo "<p>Creator ID: " . $row["creator_ID"] . "</p>";
@@ -48,19 +48,27 @@
                 echo "<p>Assessment Type: " . $row["assessment_Type"] . "</p>";
                 echo "<p>No. of Items: " . $row["no_Of_Items"] . "</p>";
                 echo "</div>";
-                
 
+                // Check if the exam is still open
+                $current_date = date("Y-m-d H:i:s");
+                $closing_date = $row["closing_date"];
+
+                if ($current_date <= $row["closing_date"]) {
+                    echo "<button>Start</button>";
+                } else {
+                    echo "<p>The assessment is now closed. Contact your professor to reopen the exam.</p>";
+                }
+                
             }
             echo "</div>";
         } else {
-            echo "No records found for Subject Code: $subject_code and Creator ID: $assessment_ID";
+            echo "No records found for Subject Code: $subject_Code and Assessment ID: $assessment_ID";
         }
                 
 
         
         $conn->close();
         ?>
-        <button>Start</button>
 
     </div>
 </body>

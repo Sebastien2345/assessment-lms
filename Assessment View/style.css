@@ -1,8 +1,6 @@
-
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #fdfdfd;
     margin: 0;
     padding: 0;
 }
@@ -58,4 +56,8 @@ button {
 
 button:hover {
     background-color: #a11a1a;
+}
+
+.assessment_ID{
+    text-align: right; 
 }
