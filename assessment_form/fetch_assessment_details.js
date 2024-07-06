@@ -2,14 +2,17 @@ async function fetchAssessmentDetails() {
     const urlParams = new URLSearchParams(window.location.search);
     const assessmentID = urlParams.get('assessmentID');
 
+    // Fetch assessment details from the server
     const response = await fetch(`fetch_assessment_details.php?assessmentID=${assessmentID}`);
     const data = await response.json();
 
+    // Set the assessment name in the HTML
     document.getElementById('assessment-name').textContent = data.assessment_Name;
 
     const questionsContainer = document.getElementById('questions-container');
     questionsContainer.innerHTML = '';
 
+    // Loop through each question and create HTML elements accordingly
     data.questions.forEach(question => {
         const questionDiv = document.createElement('div');
         questionDiv.classList.add('question');
@@ -17,6 +20,7 @@ async function fetchAssessmentDetails() {
         let questionHTML = `<p>${question.question_No}. ${question.question}</p>`;
 
         if (question.question_Type === 'M') {
+            // Multiple choice question
             questionHTML += `
                 <label><input type="radio" name="question-${question.question_ID}" value="${question.choice1}" required> ${question.choice1}</label><br>
                 <label><input type="radio" name="question-${question.question_ID}" value="${question.choice2}" required> ${question.choice2}</label><br>
@@ -24,13 +28,16 @@ async function fetchAssessmentDetails() {
                 <label><input type="radio" name="question-${question.question_ID}" value="${question.choice4}" required> ${question.choice4}</label>
             `;
         } else if (question.question_Type === 'T') {
+            // True/false question
             questionHTML += `
                 <label><input type="radio" name="question-${question.question_ID}" value="T" required> True</label><br>
                 <label><input type="radio" name="question-${question.question_ID}" value="F" required> False</label>
             `;
         } else if (question.question_Type === 'S') {
+            // Short answer question
             questionHTML += `<input type="text" name="question-${question.question_ID}" required>`;
         } else if (question.question_Type === 'F') {
+            // Matching question
             for (let i = 1; i <= 10; i++) {
                 if (question[`match${i}`]) {
                     questionHTML += `
@@ -45,6 +52,7 @@ async function fetchAssessmentDetails() {
         questionsContainer.appendChild(questionDiv);
     });
 
+    // Add hidden input fields for assessmentID and userID
     const hiddenInput = document.createElement('input');
     hiddenInput.type = 'hidden';
     hiddenInput.name = 'assessmentID';
@@ -59,20 +67,25 @@ async function fetchAssessmentDetails() {
 }
 
 async function submitAssessment() {
+    // Get form data
     const formData = new FormData(document.getElementById('assessment-form'));
 
+    // Submit assessment to the server
     const response = await fetch('submit_assessment.php', {
         method: 'POST',
         body: formData
     });
 
+    // Show the result of the submission
     const result = await response.text();
     alert(result);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Fetch assessment details when the page is loaded
     fetchAssessmentDetails();
 
+    // Submit assessment when the form is submitted
     document.getElementById('assessment-form').addEventListener('submit', event => {
         event.preventDefault();
         submitAssessment();
