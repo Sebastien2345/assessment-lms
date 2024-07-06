@@ -15,6 +15,34 @@ $stmtSelectQuestions = $conn->prepare($sqlSelectQuestions);
 $stmtSelectQuestions->bind_param('s', $assessmentID);
 $stmtSelectQuestions->execute();
 $resultQuestions = $stmtSelectQuestions->get_result();
+
+function fetchCorrectAnswers($questionID, $questionType, $conn) {
+    $sql = "";
+    switch ($questionType) {
+        case 'M':
+        case 'T':
+        case 'S':
+            $sql = "SELECT answer FROM EXAM_ANSWER WHERE question_ID = ?";
+            break;
+        case 'F':
+            $sql = "SELECT m_Ans1, m_Ans2, m_Ans3, m_Ans4,  m_Ans5, m_Ans6, m_Ans7, m_Ans8, m_Ans9, m_Ans10 FROM EXAM_ANSWER WHERE question_ID = ?";
+            break;
+        default:
+            return ''; // Handle unknown question types
+    }
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $questionID); 
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return $row; // Return the row for all question types
+    } else {
+        return ''; // Handle case where no answer is found
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -89,13 +117,19 @@ $resultQuestions = $stmtSelectQuestions->get_result();
                 <input type="text" id="option3-${count}" name="newQuestions[${count}][options][2]" required>
                 <label for="option4-${count}">Option 4:</label>
                 <input type="text" id="option4-${count}" name="newQuestions[${count}][options][3]" required>
+
                 <label for="correct-answer-${count}">Correct Answer:</label>
-                <input type="text" id="correct-answer-${count}" name="newQuestions[${count}][correctAnswer]" required>
+                <select id="correct-answer-${count}" name="newQuestions[${count}][correctAnswer]" required>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                    <option value="4">Option 4</option>
+                </select>
             `;
         } else if (selectedType === 'T') {
             optionsContainer.innerHTML = `
                 <label for="boolean-${count}">Correct Answer (True/False):</label>
-                <select id="boolean-${count}" name="newQuestions[${count}][boolean]" required>
+                <select id="boolean-${count}" name="newQuestions[${count}][correctAnswer]" required>
                     <option value="T">True</option>
                     <option value="F">False</option>
                 </select>
@@ -103,33 +137,24 @@ $resultQuestions = $stmtSelectQuestions->get_result();
         } else if (selectedType === 'S') {
             optionsContainer.innerHTML = `
                 <label for="fill-blank-${count}">Correct Answer:</label>
-                <input type="text" id="fill-blank-${count}" name="newQuestions[${count}][fillBlank]" required>
+                <input type="text" id="fill-blank-${count}" name="newQuestions[${count}][correctAnswer]" required>
             `;
         } else if (selectedType === 'F') {
-            optionsContainer.innerHTML = `
-                <label for="match1-${count}">Match 1:</label>
-                <input type="text" id="match1-${count}" name="newQuestions[${count}][match][0]" required>
-                <label for="match2-${count}">Match 2:</label>
-                <input type="text" id="match2-${count}" name="newQuestions[${count}][match][1]" required>
-                <label for="match3-${count}">Match 3:</label>
-                <input type="text" id="match3-${count}" name="newQuestions[${count}][match][2]" required>
-                <label for="match4-${count}">Match 4:</label>
-                <input type="text" id="match4-${count}" name="newQuestions[${count}][match][3]" required>
-                
-                <label for="m-ans1-${count}">Match Correct Answer 1:</label>
-                <input type="text" id="m-ans1-${count}" name="newQuestions[${count}][m_Ans1]" required>
-                <label for="m-ans2-${count}">Match Correct Answer 2:</label>
-                <input type="text" id="m-ans2-${count}" name="newQuestions[${count}][m_Ans2]" required>
-                <label for="m-ans3-${count}">Match Correct Answer 3:</label>
-                <input type="text" id="m-ans3-${count}" name="newQuestions[${count}][m_Ans3]" required>
-                <label for="m-ans4-${count}">Match Correct Answer 4:</label>
-                <input type="text" id="m-ans4-${count}" name="newQuestions[${count}][m_Ans4]" required>
-            `;
-        }
+                for (let i = 1; i <= 10; i++) {
+                    optionsContainer.innerHTML += `
+                        <label for="match${i}-${count}">Match ${i}:</label>
+                        <input type="text" id="match${i}-${count}" name="questions[${count}][match][${i - 1}]" ${i <= 4 ? 'required' : ''}>
+                        
+                        <label for="m-ans${i}-${count}">Match Correct Answer ${i}:</label>
+                        <select id="m-ans${i}-${count}" name="questions[${count}][m_Ans${i}]" ${i <= 4 ? 'required' : ''}>
+                            ${Array.from({ length: 10 }, (_, index) => `<option value="${index + 1}">Match ${index + 1}</option>`).join('')}
+                        </select>
+                    `;
+                }
+            }
     }
+
 </script>
-
-
 
 </head>
 <body>
@@ -147,16 +172,17 @@ $resultQuestions = $stmtSelectQuestions->get_result();
                     <input type="text" id="question-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][text]" value="<?php echo htmlspecialchars($question['question']); ?>" required>
                     
                     <label for="question-type-<?php echo $question['question_ID']; ?>">Question Type:</label>
-                    <select id="question-type-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][type]" onchange="displayOptions(this, <?php echo $question['question_ID']; ?>)" required>
-                        <option value="">Select Type</option>
-                        <option value="M" <?php echo ($question['question_Type'] === 'M') ? 'selected' : ''; ?>>Multiple Choice</option>
-                        <option value="T" <?php echo ($question['question_Type'] === 'T') ? 'selected' : ''; ?>>True or False</option>
-                        <option value="S" <?php echo ($question['question_Type'] === 'S') ? 'selected' : ''; ?>>Short Answer (Fill-in-the-Blank)</option>
-                        <option value="F" <?php echo ($question['question_Type'] === 'F') ? 'selected' : ''; ?>>Match</option>
+                    <select id="question-type-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][type]" onchange="displayExistingOptions(this, <?php echo $question['question_ID']; ?>)" required>
+                        <option value="M" <?php echo $question['question_Type'] === 'M' ? 'selected' : ''; ?>>Multiple Choice</option>
+                        <option value="T" <?php echo $question['question_Type'] === 'T' ? 'selected' : ''; ?>>True or False</option>
+                        <option value="S" <?php echo $question['question_Type'] === 'S' ? 'selected' : ''; ?>>Short Answer</option>
+                        <option value="F" <?php echo $question['question_Type'] === 'F' ? 'selected' : ''; ?>>Match</option>
                     </select>
 
-                    <div id="options-<?php echo $question['question_ID']; ?>" class="options-container">
-                        <?php if ($question['question_Type'] === 'M'): ?>
+                    <div id="options-existing-<?php echo $question['question_ID']; ?>" class="options-container">
+                        <?php 
+                        $correctAnswers = fetchCorrectAnswers($question['question_ID'], $question['question_Type'], $conn); 
+                        if ($question['question_Type'] === 'M'): ?>
                             <label for="option1-<?php echo $question['question_ID']; ?>">Option 1:</label>
                             <input type="text" id="option1-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][options][0]" value="<?php echo htmlspecialchars($question['choice1']); ?>" required>
                             <label for="option2-<?php echo $question['question_ID']; ?>">Option 2:</label>
@@ -165,43 +191,37 @@ $resultQuestions = $stmtSelectQuestions->get_result();
                             <input type="text" id="option3-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][options][2]" value="<?php echo htmlspecialchars($question['choice3']); ?>" required>
                             <label for="option4-<?php echo $question['question_ID']; ?>">Option 4:</label>
                             <input type="text" id="option4-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][options][3]" value="<?php echo htmlspecialchars($question['choice4']); ?>" required>
+
                             <label for="correct-answer-<?php echo $question['question_ID']; ?>">Correct Answer:</label>
-                            <input type="text" id="correct-answer-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][correctAnswer]" value="<?php echo htmlspecialchars($question['correctAnswer']); ?>" required>
+                            <select id="correct-answer-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][correctAnswer]" required>
+                                <option value="1" <?php echo $correctAnswers['answer'] == 1 ? 'selected' : ''; ?>>Option 1</option>
+                                <option value="2" <?php echo $correctAnswers['answer'] == 2 ? 'selected' : ''; ?>>Option 2</option>
+                                <option value="3" <?php echo $correctAnswers['answer'] == 3 ? 'selected' : ''; ?>>Option 3</option>
+                                <option value="4" <?php echo $correctAnswers['answer'] == 4 ? 'selected' : ''; ?>>Option 4</option>
+                            </select>
                         <?php elseif ($question['question_Type'] === 'T'): ?>
                             <label for="boolean-<?php echo $question['question_ID']; ?>">Correct Answer (True/False):</label>
-                            <select id="boolean-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][boolean]" required>
-                                <option value="T" <?php echo ($question['boolean'] === 'T') ? 'selected' : ''; ?>>True</option>
-                                <option value="F" <?php echo ($question['boolean'] === 'F') ? 'selected' : ''; ?>>False</option>
+                            <select id="boolean-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][correctAnswer]" required>
+                                <option value="T" <?php echo $correctAnswers['answer'] == 'T' ? 'selected' : ''; ?>>True</option>
+                                <option value="F" <?php echo $correctAnswers['answer'] == 'F' ? 'selected' : ''; ?>>False</option>
                             </select>
                         <?php elseif ($question['question_Type'] === 'S'): ?>
                             <label for="fill-blank-<?php echo $question['question_ID']; ?>">Correct Answer:</label>
-                            <input type="text" id="fill-blank-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][fillBlank]" value="<?php echo htmlspecialchars($question['fill_Blank']); ?>" required>
-                        <?php elseif ($question['question_Type'] === 'F'): ?>
-                            <label for="match1-<?php echo $question['question_ID']; ?>">Match 1:</label>
-                            <input type="text" id="match1-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][match][0]" value="<?php echo htmlspecialchars($question['match1']); ?>" required>
-                            <label for="match2-<?php echo $question['question_ID']; ?>">Match 2:</label>
-                            <input type="text" id="match2-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][match][1]" value="<?php echo htmlspecialchars($question['match2']); ?>" required>
-                            <label for="match3-<?php echo $question['question_ID']; ?>">Match 3:</label>
-                            <input type="text" id="match3-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][match][2]" value="<?php echo htmlspecialchars($question['match3']); ?>" required>
-                            <label for="match4-<?php echo $question['question_ID']; ?>">Match 4:</label>
-                            <input type="text" id="match4-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][match][3]" value="<?php echo htmlspecialchars($question['match4']); ?>" required>
-
-                            <label for="m-ans1-<?php echo $question['question_ID']; ?>">Match Correct Answer 1:</label>
-                            <input type="text" id="m-ans1-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][m_Ans1]" value="<?php echo htmlspecialchars($question['m_Ans1']); ?>" required>
-                            <label for="m-ans2-<?php echo $question['question_ID']; ?>">Match Correct Answer 2:</label>
-                            <input type="text" id="m-ans2-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][m_Ans2]" value="<?php echo htmlspecialchars($question['m_Ans2']); ?>" required>
-                            <label for="m-ans3-<?php echo $question['question_ID']; ?>">Match Correct Answer 3:</label>
-                            <input type="text" id="m-ans3-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][m_Ans3]" value="<?php echo htmlspecialchars($question['m_Ans3']); ?>" required>
-                            <label for="m-ans4-<?php echo $question['question_ID']; ?>">Match Correct Answer 4:</label>
-                            <input type="text" id="m-ans4-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][m_Ans4]" value="<?php echo htmlspecialchars($question['m_Ans4']); ?>" required>
+                            <input type="text" id="fill-blank-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][correctAnswer]" value="<?php echo htmlspecialchars($correctAnswers['answer']); ?>" required>
+                            <?php elseif ($question['question_Type'] === 'F'): ?>
+                            <?php for ($i = 1; $i <= 10; $i++): ?>
+                                <label for="match<?php echo $i; ?>-<?php echo $question['question_ID']; ?>">Match <?php echo $i; ?>:</label>
+                                <input type="text" id="match<?php echo $i; ?>-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][match][<?php echo $i - 1; ?>]" value="<?php echo htmlspecialchars($correctAnswers['m_Ans'.$i]); ?>" required>
+                                <br>
+                            <?php endfor; ?>
                         <?php endif; ?>
                     </div>
                 </div>
             <?php endwhile; ?>
         </div>
         <div id="new-questions-container"></div>
-        <button type="button" onclick="addQuestion()">Add Question</button>
-        <button type="submit">Save Changes</button>
+        <button type="button" onclick="addQuestion()">Add New Question</button>
+        <button type="submit">Save</button>
     </form>
 </body>
 </html>

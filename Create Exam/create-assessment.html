@@ -59,7 +59,6 @@
             const selectedType = selectElement.value;
             const optionsContainer = document.getElementById(`options-${count}`);
             optionsContainer.innerHTML = '';
-
             if (selectedType === 'M') {
                 optionsContainer.innerHTML = `
                     <label for="option1-${count}">Option 1:</label>
@@ -70,13 +69,19 @@
                     <input type="text" id="option3-${count}" name="questions[${count}][options][2]" required>
                     <label for="option4-${count}">Option 4:</label>
                     <input type="text" id="option4-${count}" name="questions[${count}][options][3]" required>
+
                     <label for="correct-answer-${count}">Correct Answer:</label>
-                    <input type="text" id="correct-answer-${count}" name="questions[${count}][correctAnswer]" required>
+                    <select id="correct-answer-${count}" name="questions[${count}][correctAnswer]" required>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                        <option value="4">Option 4</option>
+                    </select>
                 `;
             } else if (selectedType === 'T') {
                 optionsContainer.innerHTML = `
                     <label for="boolean-${count}">Correct Answer (True/False):</label>
-                    <select id="boolean-${count}" name="questions[${count}][boolean]" required>
+                    <select id="boolean-${count}" name="questions[${count}][correctAnswer]" required>
                         <option value="T">True</option>
                         <option value="F">False</option>
                     </select>
@@ -84,52 +89,20 @@
             } else if (selectedType === 'S') {
                 optionsContainer.innerHTML = `
                     <label for="fill-blank-${count}">Correct Answer:</label>
-                    <input type="text" id="fill-blank-${count}" name="questions[${count}][fillBlank]" required>
+                    <input type="text" id="fill-blank-${count}" name="questions[${count}][correctAnswer]" required>
                 `;
             } else if (selectedType === 'F') {
-                optionsContainer.innerHTML = `
-                    <label for="match1-${count}">Match 1:</label>
-                    <input type="text" id="match1-${count}" name="questions[${count}][match][0]" required>
-                    <label for="match2-${count}">Match 2:</label>
-                    <input type="text" id="match2-${count}" name="questions[${count}][match][1]" required>
-                    <label for="match3-${count}">Match 3:</label>
-                    <input type="text" id="match3-${count}" name="questions[${count}][match][2]" required>
-                    <label for="match4-${count}">Match 4:</label>
-                    <input type="text" id="match4-${count}" name="questions[${count}][match][3]" required>
-                    <label for="match5-${count}">Match 5:</label>
-                    <input type="text" id="match5-${count}" name="questions[${count}][match][4]">
-                    <label for="match6-${count}">Match 6:</label>
-                    <input type="text" id="match6-${count}" name="questions[${count}][match][5]">
-                    <label for="match7-${count}">Match 7:</label>
-                    <input type="text" id="match7-${count}" name="questions[${count}][match][6]">
-                    <label for="match8-${count}">Match 8:</label>
-                    <input type="text" id="match8-${count}" name="questions[${count}][match][7]">
-                    <label for="match9-${count}">Match 9:</label>
-                    <input type="text" id="match9-${count}" name="questions[${count}][match][8]">
-                    <label for="match10-${count}">Match 10:</label>
-                    <input type="text" id="match10-${count}" name="questions[${count}][match][9]">
-                    
-                    <label for="m-ans1-${count}">Match Correct Answer 1:</label>
-                    <input type="text" id="m-ans1-${count}" name="questions[${count}][m_Ans1]" required>
-                    <label for="m-ans2-${count}">Match Correct Answer 2:</label>
-                    <input type="text" id="m-ans2-${count}" name="questions[${count}][m_Ans2]" required>
-                    <label for="m-ans3-${count}">Match Correct Answer 3:</label>
-                    <input type="text" id="m-ans3-${count}" name="questions[${count}][m_Ans3]" required>
-                    <label for="m-ans4-${count}">Match Correct Answer 4:</label>
-                    <input type="text" id="m-ans4-${count}" name="questions[${count}][m_Ans4]" required>
-                    <label for="m-ans5-${count}">Match Correct Answer 5:</label>
-                    <input type="text" id="m-ans5-${count}" name="questions[${count}][m_Ans5]">
-                    <label for="m-ans6-${count}">Match Correct Answer 6:</label>
-                    <input type="text" id="m-ans6-${count}" name="questions[${count}][m_Ans6]">
-                    <label for="m-ans7-${count}">Match Correct Answer 7:</label>
-                    <input type="text" id="m-ans7-${count}" name="questions[${count}][m_Ans7]">
-                    <label for="m-ans8-${count}">Match Correct Answer 8:</label>
-                    <input type="text" id="m-ans8-${count}" name="questions[${count}][m_Ans8]">
-                    <label for="m-ans9-${count}">Match Correct Answer 9:</label>
-                    <input type="text" id="m-ans9-${count}" name="questions[${count}][m_Ans9]">
-                    <label for="m-ans10-${count}">Match Correct Answer 10:</label>
-                    <input type="text" id="m-ans10-${count}" name="questions[${count}][m_Ans10]">
-                `;
+                for (let i = 1; i <= 10; i++) {
+                    optionsContainer.innerHTML += `
+                        <label for="match${i}-${count}">Match ${i}:</label>
+                        <input type="text" id="match${i}-${count}" name="questions[${count}][match][${i - 1}]" ${i <= 4 ? 'required' : ''}>
+                        
+                        <label for="m-ans${i}-${count}">Match Correct Answer ${i}:</label>
+                        <select id="m-ans${i}-${count}" name="questions[${count}][m_Ans${i}]" ${i <= 4 ? 'required' : ''}>
+                            ${Array.from({ length: 10 }, (_, index) => `<option value="${index + 1}">Match ${index + 1}</option>`).join('')}
+                        </select>
+                    `;
+                }
             }
         }
     </script>
@@ -147,6 +120,3 @@
     </form>
 </body>
 </html>
-
-
-
