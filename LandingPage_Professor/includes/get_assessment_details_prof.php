@@ -1,7 +1,7 @@
 <?php
-    require_once 'config_session_inc.php';
-    require_once "dbh_inc.php";
-    require_once 'execute_query_inc.php';
+    require_once '../includes/config_session_inc.php';
+    require_once '../includes/dbh_inc.php';
+    require_once '../includes/execute_query_inc.php';
 
     // fetch assessments
     $query_assessment = "SELECT assessment_id, subject_Code, assessment_name, date_opened, date_closed FROM assessment";

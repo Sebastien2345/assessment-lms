@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('../includes/get_assessment_details_prof.php')
+    fetch('../LandingPage_Professor/includes/get_assessment_details_prof.php')
   .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -69,7 +69,7 @@ function populateAssessments(assessments) {
 }
 
 function fetchAndDisplayStudents(assessmentID, subjectCode) {
-    fetch(`../includes/assessment_prof_model.php?assessment_ID='${assessmentID}'&subject_Code='${subjectCode}'`)
+    fetch(`../LandingPage_Professor/includes/assessment_prof_model.php?assessment_ID='${assessmentID}'&subject_Code='${subjectCode}'`)
       .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -90,7 +90,6 @@ function fetchAndDisplayStudents(assessmentID, subjectCode) {
 }
 
 function displayStudents(container, students) {
-    // Clear the innerHTML of the container
     container.innerHTML = '';
 
     students.forEach(student => {
@@ -108,18 +107,14 @@ function displayStudents(container, students) {
 
         // Add click event listener to the review button
         reviewButton.addEventListener('click', () => {
-            // Get the assessment ID from the container's attribute
             const assessmentID = container.getAttribute('assessmentID');
 
-            // Handle the button click based on the attempted flag and assessment ID
+
             if (student.attempted && assessmentID === student.assessmentID) {
-                // Logic to review the attempted assessment for this student and assessment ID
                 console.log(`Reviewing attempted assessment for student: ${student.name}, assessment ID: ${assessmentID}`);
-                // You can replace this with your specific logic for reviewing the attempt, e.g., redirecting to a review page
-            } else {
-                // Logic for students who haven't attempted the assessment
+            } 
+            else {
                 console.log(`Student: ${student.name} has not attempted assessment ID: ${assessmentID}`);
-                // You can display a message or offer instructions here
             }
         });
 
