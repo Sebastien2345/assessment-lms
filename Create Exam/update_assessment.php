@@ -32,6 +32,7 @@ foreach ($questions as $questionID => $questionData) {
     if (is_numeric($questionID)) {
         $text = $questionData['text'];
         $type = $questionData['type'];
+        $points = $questionData['points'];
 
         // Update EXAMINATION_BANK table
         switch ($type) {
@@ -52,6 +53,14 @@ foreach ($questions as $questionID => $questionData) {
                 $stmtUpdateAnswer = $conn->prepare($sqlUpdateAnswer);
                 $stmtUpdateAnswer->bind_param('sii', $correctAnswer, $assessmentID, $questionID);
                 $stmtUpdateAnswer->execute();
+
+
+                    // Update points in the EXAMINATION_BANK table
+                $sqlUpdateQuestionPoints = "UPDATE EXAMINATION_BANK SET points = ? WHERE question_ID = ?";
+                $stmtUpdatePoints = $conn->prepare($sqlUpdateQuestionPoints);
+                $stmtUpdatePoints->bind_param('ii', $points, $questionID);
+                $stmtUpdatePoints->execute();
+                $stmtUpdatePoints->close();
                 break;
 
             case 'T': // True or False
@@ -118,13 +127,14 @@ foreach ($questions as $questionID => $questionData) {
 foreach ($newQuestions as $newQuestion) {
     $text = $newQuestion['text'];
     $type = $newQuestion['type'];
+    $points = $newQuestion['points'];
     $options = $newQuestion['options'] ?? [];
     $correctAnswer = $newQuestion['correctAnswer'] ?? '';
 
     // Prepare SQL to insert question details
-    $query = "INSERT INTO EXAMINATION_BANK (assessment_ID, question, question_Type) VALUES (?, ?, ?)";
+    $query = "INSERT INTO EXAMINATION_BANK (assessment_ID, question, question_Type, points) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('sss', $assessmentID, $text, $type);
+    $stmt->bind_param('sssi', $assessmentID, $text, $type, $points);
     $stmt->execute();
     $newQuestionID = $stmt->insert_id;
 

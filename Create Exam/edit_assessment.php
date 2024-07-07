@@ -96,6 +96,10 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
                     <option value="F">Match</option>
                 </select>
 
+                <label for="new-question-points-${questionCount}">Points:</label>
+                <input type="number" id="new-question-points-${questionCount}" name="newQuestions[${questionCount}][points]" required>
+        
+
                 <div id="options-new-${questionCount}" class="options-container"></div>
             `;
 
@@ -176,6 +180,10 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
                         <option value="S" <?php echo $question['question_Type'] === 'S' ? 'selected' : ''; ?>>Short Answer</option>
                         <option value="F" <?php echo $question['question_Type'] === 'F' ? 'selected' : ''; ?>>Match</option>
                     </select>
+
+                    <!-- Add input field for points -->
+                    <label for="points-<?php echo $question['question_ID']; ?>">Points:</label>
+                    <input type="number" id="points-<?php echo $question['question_ID']; ?>" name="questions[<?php echo $question['question_ID']; ?>][points]" value="<?php echo htmlspecialchars($question['points']); ?>" required>
 
                     <div id="options-existing-<?php echo $question['question_ID']; ?>" class="options-container">
                         <?php 
