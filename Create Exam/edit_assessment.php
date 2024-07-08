@@ -167,6 +167,10 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
             <label for="assessmentName">Assessment Name:</label>
             <input type="text" id="assessmentName" name="assessmentName" value="<?php echo htmlspecialchars($assessment['assessment_Name']); ?>" required>
         </div>
+        <div class="form-group">
+            <label for="timeLimit">Time Limit (minutes):</label>
+            <input type="number" id="timeLimit" name="timeLimit" value="<?php echo htmlspecialchars($assessment['time_Limit']); ?>" required>
+        </div>
         <div id="existing-questions-container">
             <?php while ($question = $resultQuestions->fetch_assoc()): ?>
                 <div class="form-group">

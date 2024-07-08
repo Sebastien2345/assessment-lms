@@ -17,14 +17,14 @@ $date = date('Y-m-d');
 $creatorID = '1'; // Replace with actual creator ID
 $subjectCode = 'SUB123'; // Replace with actual subject code
 $assessmentType = 'Q';
-$timeLimit = '30';
+$timeLimit = $_POST['timeLimit'];
 $questions = isset($_POST['questions']) ? $_POST['questions'] : [];
 $noOfItems = count($questions) + count($newQuestions);
 
 // Update ASSESSMENT
 $sqlUpdateAssessment = "UPDATE ASSESSMENT SET assessment_Name = ?, date = ?, creator_ID = ?, subject_Code = ?, assessment_Type = ?, time_Limit = ?, no_Of_Items = ? WHERE assessment_ID = ?";
 $stmtUpdateAssessment = $conn->prepare($sqlUpdateAssessment);
-$stmtUpdateAssessment->bind_param('ssssssss', $assessmentName, $date, $creatorID, $subjectCode, $assessmentType, $timeLimit, $noOfItems, $assessmentID);
+$stmtUpdateAssessment->bind_param('ssssssis', $assessmentName, $date, $creatorID, $subjectCode, $assessmentType, $timeLimit, $noOfItems, $assessmentID);
 $stmtUpdateAssessment->execute();
 
 // Process each existing question
