@@ -1,7 +1,5 @@
-#landing_page {
-    display: flex;
-    flex-direction: row;
-    width: 100vw;
+body {
+background-color: #F2F3F7;
 }
 
 #nav_assessment_prof {
@@ -11,7 +9,11 @@
 #container_assessments_prof{
     display: flex;
     flex-direction: column;
-    width: 90vw;
+    width: 80vw;
+    padding: 2%;
+    margin: auto;
+    background-color: #FFFFFF;
+    border-radius: 20px;
 }
 
 .hidden {

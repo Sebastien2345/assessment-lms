@@ -22,14 +22,11 @@
 
 <body>
     <div id="landing_page">
-        <div id="nav_assessment_prof">
-            <a href='#section1'>BSCS 3-5</a>
+        <div class="flex_row">
+            <button onclick="window.location.href='../LandingPage_Professor/pages/create_exam.html'">+ Add Assessment</button>
         </div>
-        
+
         <div id="container_assessments_prof">
-            <div class="flex_row">
-                <button onclick="window.location.href='../LandingPage_Professor/pages/create_exam.html'">+ Add Assessment</button>
-            </div>
             <h1 id='section1'>BSCS 3-5</h1>
 
             <div id="container_section_assessment">
