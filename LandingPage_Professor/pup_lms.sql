@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307:3307
--- Generation Time: Jul 06, 2024 at 08:25 AM
+-- Generation Time: Jul 08, 2024 at 09:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,7 +31,7 @@ CREATE TABLE `assessment` (
   `assessment_ID` varchar(10) NOT NULL,
   `date_opened` datetime DEFAULT NULL,
   `creator_ID` varchar(12) DEFAULT NULL,
-  `subject_Code` varchar(10) DEFAULT NULL,
+  `subject_ID` varchar(10) DEFAULT NULL,
   `assessment_Type` char(1) DEFAULT NULL,
   `time_Limit` varchar(5) DEFAULT NULL,
   `no_Of_Items` varchar(3) DEFAULT NULL,
@@ -43,10 +43,9 @@ CREATE TABLE `assessment` (
 -- Dumping data for table `assessment`
 --
 
-INSERT INTO `assessment` (`assessment_ID`, `date_opened`, `creator_ID`, `subject_Code`, `assessment_Type`, `time_Limit`, `no_Of_Items`, `date_closed`, `assessment_name`) VALUES
-('WB123', '2024-07-03 12:00:00', '201510754MN0', 'IM-1', 'M', '30', '10', '2024-07-05 12:00:00', 'Quiz #1 HTML and CSS'),
-('WB124', '2024-07-12 12:00:00', '201510754MN0', 'IM-2', 'M', '30', '10', '2024-07-13 12:00:00', 'Quiz #2 JavaScript'),
-('WB126', '2024-07-06 04:40:15', '201510754MN0', 'IM-132', 'M', '30', '10', '2024-07-05 22:40:15', 'Quiz #3: PHP');
+INSERT INTO `assessment` (`assessment_ID`, `date_opened`, `creator_ID`, `subject_ID`, `assessment_Type`, `time_Limit`, `no_Of_Items`, `date_closed`, `assessment_name`) VALUES
+('COMP123-Q1', '2024-07-05 00:21:08', '201510754MN0', 'COMP123INS', 'M', '40', '20', '2024-07-06 00:21:08', 'Quiz 1: HTML and CSS'),
+('COMP123-Q2', '2024-07-07 00:21:08', '201510754MN0', 'COMP123INS', 'T', '30', '10', '2024-07-08 16:00:00', 'Quiz 2: JavaScript');
 
 -- --------------------------------------------------------
 
@@ -88,10 +87,17 @@ INSERT INTO `college` (`college_ID`, `college_Name`, `description`) VALUES
 
 CREATE TABLE `course` (
   `course_ID` varchar(15) NOT NULL,
-  `course_Description` varchar(50) DEFAULT NULL,
-  `college_ID` char(1) DEFAULT NULL,
-  `no_Of_Years` char(1) DEFAULT NULL
+  `course_description` varchar(50) NOT NULL,
+  `college_id` varchar(10) NOT NULL,
+  `no_of_years` char(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `course`
+--
+
+INSERT INTO `course` (`course_ID`, `course_description`, `college_id`, `no_of_years`) VALUES
+('BSCS', 'BS Computer Science', 'CCIS', '4');
 
 -- --------------------------------------------------------
 
@@ -105,6 +111,16 @@ CREATE TABLE `course_enrolled` (
   `ay` varchar(4) DEFAULT NULL,
   `semester` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `course_enrolled`
+--
+
+INSERT INTO `course_enrolled` (`user_ID`, `course_ID`, `ay`, `semester`) VALUES
+('202110345MN0', 'BSCS', '2024', '6'),
+('202110345MN0', 'BSCS', '2024', '6'),
+('202110750MN0', 'BSCS', '2024', '6'),
+('202110755MN0', 'BSCS', '2024', '6');
 
 -- --------------------------------------------------------
 
@@ -258,6 +274,15 @@ CREATE TABLE `subject` (
   `course_ID` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `subject`
+--
+
+INSERT INTO `subject` (`subject_ID`, `subject_Name`, `subject_Description`, `semester`, `course_ID`) VALUES
+('COMP123INS', 'Information Management', '.', '4', 'BSCS'),
+('COMP124', 'Web Development', '.', '6', 'BSCS'),
+('COSC123', 'Intro to AI', '.', '6', 'BSCS');
+
 -- --------------------------------------------------------
 
 --
@@ -327,8 +352,11 @@ CREATE TABLE `user_exam_report` (
 --
 
 INSERT INTO `user_exam_report` (`user_ID`, `assessment_ID`, `score`, `grade`, `subject_Code`, `date`) VALUES
-('202110345MN0', 'WB123', '10', 1, 'IM-1', '2024-06-24'),
-('202110755MN0', 'WB126', '10', 1, 'IM-1', '2024-07-06');
+('202110345MN0', 'COMP123-Q1', '40', 1, 'COMP123INS', '2024-07-07'),
+('202110750MN0', 'COMP123-Q1', '40', 1, 'COMP123INS', '2024-07-06'),
+('202110755MN0', 'COMP123-Q1', '40', 1, 'COMP123INS', '2024-07-05'),
+('202110750MN0', 'COMP123-Q1', '40', 1, 'COMP123INS', '2024-07-06'),
+('202110755MN0', 'COMP123-Q2', '25', 1.25, 'COMP123INS', '2024-07-05');
 
 -- --------------------------------------------------------
 
@@ -398,7 +426,8 @@ INSERT INTO `user_role` (`user_ID`, `user_Role`, `date_Assigned`, `previous_Role
 --
 ALTER TABLE `assessment`
   ADD PRIMARY KEY (`assessment_ID`),
-  ADD KEY `creator_ID` (`creator_ID`);
+  ADD KEY `creator_ID` (`creator_ID`),
+  ADD KEY `subject_id_ibfk1` (`subject_ID`);
 
 --
 -- Indexes for table `cohort`
@@ -417,21 +446,20 @@ ALTER TABLE `college`
 --
 ALTER TABLE `course`
   ADD PRIMARY KEY (`course_ID`),
-  ADD KEY `college_ID` (`college_ID`);
+  ADD KEY `college_id_fk` (`college_id`);
 
 --
 -- Indexes for table `course_enrolled`
 --
 ALTER TABLE `course_enrolled`
-  ADD KEY `user_ID` (`user_ID`),
-  ADD KEY `course_ID` (`course_ID`);
+  ADD KEY `user_id_ibfk_1` (`user_ID`),
+  ADD KEY `course_id_ibfk_2` (`course_ID`);
 
 --
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
-  ADD PRIMARY KEY (`department_ID`),
-  ADD KEY `college_ID` (`college_ID`);
+  ADD PRIMARY KEY (`department_ID`);
 
 --
 -- Indexes for table `examination_bank`
@@ -478,7 +506,7 @@ ALTER TABLE `student_submission`
 --
 ALTER TABLE `subject`
   ADD PRIMARY KEY (`subject_ID`),
-  ADD KEY `course_ID` (`course_ID`);
+  ADD KEY `course_id_ibfk_3` (`course_ID`);
 
 --
 -- Indexes for table `submission_requirement`
@@ -503,8 +531,9 @@ ALTER TABLE `user_examination`
 -- Indexes for table `user_exam_report`
 --
 ALTER TABLE `user_exam_report`
-  ADD KEY `user_ID` (`user_ID`),
-  ADD KEY `assessment_ID` (`assessment_ID`);
+  ADD KEY `user_id_ibfk` (`user_ID`),
+  ADD KEY `assessment_id_ibfk` (`assessment_ID`),
+  ADD KEY `subject_code_ibfk` (`subject_Code`);
 
 --
 -- Indexes for table `user_information`
@@ -526,7 +555,8 @@ ALTER TABLE `user_role`
 -- Constraints for table `assessment`
 --
 ALTER TABLE `assessment`
-  ADD CONSTRAINT `assessment_ibfk_1` FOREIGN KEY (`creator_ID`) REFERENCES `user_information` (`user_ID`);
+  ADD CONSTRAINT `assessment_ibfk_1` FOREIGN KEY (`creator_ID`) REFERENCES `user_information` (`user_ID`),
+  ADD CONSTRAINT `subject_id_ibfk1` FOREIGN KEY (`subject_ID`) REFERENCES `subject` (`subject_ID`);
 
 --
 -- Constraints for table `cohort`
@@ -538,14 +568,14 @@ ALTER TABLE `cohort`
 -- Constraints for table `course`
 --
 ALTER TABLE `course`
-  ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`college_ID`) REFERENCES `college` (`college_ID`);
+  ADD CONSTRAINT `college_id_fk_1` FOREIGN KEY (`college_id`) REFERENCES `college` (`college_ID`);
 
 --
 -- Constraints for table `course_enrolled`
 --
 ALTER TABLE `course_enrolled`
-  ADD CONSTRAINT `course_enrolled_ibfk_1` FOREIGN KEY (`user_ID`) REFERENCES `user_information` (`user_ID`),
-  ADD CONSTRAINT `course_enrolled_ibfk_2` FOREIGN KEY (`course_ID`) REFERENCES `course` (`course_ID`);
+  ADD CONSTRAINT `course_id_ibfk_2` FOREIGN KEY (`course_ID`) REFERENCES `course` (`course_ID`),
+  ADD CONSTRAINT `user_id_ibfk_1` FOREIGN KEY (`user_ID`) REFERENCES `user_information` (`user_ID`);
 
 --
 -- Constraints for table `department`
@@ -595,7 +625,7 @@ ALTER TABLE `student_submission`
 -- Constraints for table `subject`
 --
 ALTER TABLE `subject`
-  ADD CONSTRAINT `subject_ibfk_1` FOREIGN KEY (`course_ID`) REFERENCES `course` (`course_ID`);
+  ADD CONSTRAINT `course_id_ibfk_3` FOREIGN KEY (`course_ID`) REFERENCES `course` (`course_ID`);
 
 --
 -- Constraints for table `user_access`
@@ -614,8 +644,9 @@ ALTER TABLE `user_examination`
 -- Constraints for table `user_exam_report`
 --
 ALTER TABLE `user_exam_report`
-  ADD CONSTRAINT `user_exam_report_ibfk_1` FOREIGN KEY (`user_ID`) REFERENCES `user_information` (`user_ID`),
-  ADD CONSTRAINT `user_exam_report_ibfk_2` FOREIGN KEY (`assessment_ID`) REFERENCES `assessment` (`assessment_ID`);
+  ADD CONSTRAINT `assessment_id_ibfk` FOREIGN KEY (`assessment_ID`) REFERENCES `assessment` (`assessment_ID`),
+  ADD CONSTRAINT `subject_code_ibfk` FOREIGN KEY (`subject_Code`) REFERENCES `subject` (`subject_ID`),
+  ADD CONSTRAINT `user_id_ibfk` FOREIGN KEY (`user_ID`) REFERENCES `user_information` (`user_ID`);
 
 --
 -- Constraints for table `user_role`
