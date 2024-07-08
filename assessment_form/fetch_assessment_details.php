@@ -1,7 +1,7 @@
 <?php
 require "db.php";
 $assessmentID = $_GET['assessmentID'];
-$assessmentID = 'A66879f069';
+$assessmentID = 'A668c22466';
 
 $assessmentSQL = "SELECT assessment_Name FROM assessment WHERE assessment_ID = ?";
 $stmt = $conn->prepare($assessmentSQL);
