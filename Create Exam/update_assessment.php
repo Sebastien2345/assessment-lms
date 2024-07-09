@@ -3,12 +3,13 @@ require "db.php";
 
 // Function to update assessment
 function updateAssessment($conn, $data) {
-    $sql = "UPDATE ASSESSMENT SET assessment_Name = ?, date = ?, creator_ID = ?, subject_Code = ?, assessment_Type = ?, time_Limit = ?, no_Of_Items = ?, closing_Date = ?, assessment_Desc = ?, allowed_Attempts = ? WHERE assessment_ID = ?";
+    $sql = "UPDATE ASSESSMENT SET assessment_Name = ?, date = ?, open_date = ?, creator_ID = ?, subject_Code = ?, assessment_Type = ?, time_Limit = ?, no_Of_Items = ?, closing_Date = ?, assessment_Desc = ?, allowed_Attempts = ? WHERE assessment_ID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        'ssssssissss', 
+        'sssssssissss', 
         $data['assessmentName'], 
         $data['date'], 
+        $data['open_date'],
         $data['creatorID'], 
         $data['subjectCode'], 
         $data['assessmentType'], 
@@ -145,6 +146,7 @@ try {
         'assessmentID' => $assessmentID,
         'assessmentName' => $_POST['assessmentName'],
         'date' => date('Y-m-d'),
+        'open_date' => $_POST['openDate'],
         'creatorID' => '1', // Replace with actual creator ID
         'subjectCode' => 'SUB123', // Replace with actual subject code
         'assessmentType' => 'Q',

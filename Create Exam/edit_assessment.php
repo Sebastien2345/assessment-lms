@@ -219,8 +219,12 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
             <input type="number" id="timeLimit" name="timeLimit" value="<?php echo isset($assessment['time_Limit']) ? htmlspecialchars($assessment['time_Limit']) : ''; ?>" required>
         </div>
         <div class="form-group">
+            <label for="openDate">Open Date:</label>
+            <input type="date" id="openDate" name="openDate" value="<?php echo isset($assessment['open_Date']) ? htmlspecialchars($assessment['open_Date']) : ''; ?>">
+        </div>
+        <div class="form-group">
             <label for="closingDate">Closing Date:</label>
-            <input type="datetime" id="closingDate" name="closingDate" value="<?php echo isset($assessment['closing_date']) ? htmlspecialchars($assessment['closing_date']) : ''; ?>">
+            <input type="date" id="closingDate" name="closingDate" value="<?php echo isset($assessment['closing_date']) ? htmlspecialchars($assessment['closing_date']) : ''; ?>">
         </div>
         <div class="form-group">
             <label for="allowedAttempts">Allowed Attempt:</label> 
