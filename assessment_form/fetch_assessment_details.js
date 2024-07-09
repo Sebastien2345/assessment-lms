@@ -17,7 +17,7 @@ async function fetchAssessmentDetails() {
         const questionDiv = document.createElement('div');
         questionDiv.classList.add('question');
 
-        let questionHTML = `<p>${question.question_No}. ${question.question}</p>`;
+        let questionHTML = `<p>${question.question_No}. ${question.question} (${question.points} points)</p>`;
 
         if (question.question_Type === 'M') {
             // Multiple choice question
@@ -38,14 +38,27 @@ async function fetchAssessmentDetails() {
             questionHTML += `<input type="text" name="question-${question.question_ID}" required>`;
         } else if (question.question_Type === 'F') {
             // Matching question
+            questionHTML += '<table>';
+            const matchOptions = [];
             for (let i = 1; i <= 10; i++) {
                 if (question[`match${i}`]) {
-                    questionHTML += `
-                        <label>Match ${i}: ${question[`match${i}`]}</label>
-                        <input type="text" name="question-${question.question_ID}-match${i}" required><br>
-                    `;
+                    matchOptions.push(question[`match${i}`]);
                 }
             }
+            for (let i = 1; i <= matchOptions.length; i++) {
+                questionHTML += `
+                    <tr>
+                        <td>${question[`match${i}`]}</td>
+                        <td>
+                            <select name="question-${question.question_ID}-match${i}" required>
+                                <option value="">Select...</option>
+                                ${matchOptions.map(option => `<option value="${option}">${option}</option>`).join('')}
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }
+            questionHTML += '</table>';
         }
 
         questionDiv.innerHTML = questionHTML;
@@ -64,6 +77,31 @@ async function fetchAssessmentDetails() {
     userIDInput.name = 'userID';
     userIDInput.value = 'USER123'; // Replace with actual userID
     document.getElementById('assessment-form').appendChild(userIDInput);
+
+    // Set up the timer if there is a time limit
+    if (data.time_Limit) {
+        setupTimer(data.time_Limit);
+    }
+}
+
+function setupTimer(timeLimit) {
+    const timerElement = document.getElementById('timer');
+    let timeRemaining = parseInt(timeLimit) * 60; // Convert minutes to seconds
+
+    const interval = setInterval(() => {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+
+        timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeRemaining <= 0) {
+            clearInterval(interval);
+            alert('Time is up! Your assessment will be submitted.');
+            document.getElementById('assessment-form').submit();
+        }
+
+        timeRemaining--;
+    }, 1000);
 }
 
 async function submitAssessment() {
