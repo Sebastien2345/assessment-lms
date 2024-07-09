@@ -1,9 +1,10 @@
 <?php
 require "db.php";
-$assessmentID = $_GET['assessmentID'];
-$assessmentID = 'A668c22466';
 
-$assessmentSQL = "SELECT assessment_Name FROM assessment WHERE assessment_ID = ?";
+$assessmentID = $_GET['assessmentID'];
+$assessmentID = 'A668c246ea';
+
+$assessmentSQL = "SELECT assessment_Name, time_Limit FROM assessment WHERE assessment_ID = ?";
 $stmt = $conn->prepare($assessmentSQL);
 $stmt->bind_param("s", $assessmentID);
 $stmt->execute();
@@ -23,6 +24,7 @@ while ($row = $questionsResult->fetch_assoc()) {
 
 $response = [
     'assessment_Name' => $assessment['assessment_Name'],
+    'time_Limit' => $assessment['time_Limit'],
     'questions' => $questions
 ];
 
