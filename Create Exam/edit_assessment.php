@@ -25,7 +25,7 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
             $sql = "SELECT answer FROM EXAM_ANSWER WHERE question_ID = ?";
             break;
         case 'F':
-            $sql = "SELECT m_Ans1, m_Ans2, m_Ans3, m_Ans4,  m_Ans5, m_Ans6, m_Ans7, m_Ans8, m_Ans9, m_Ans10 FROM EXAM_ANSWER WHERE question_ID = ?";
+            $sql = "SELECT m_Ans1, m_Ans2, m_Ans3, m_Ans4, m_Ans5, m_Ans6, m_Ans7, m_Ans8, m_Ans9, m_Ans10 FROM EXAM_ANSWER WHERE question_ID = ?";
             break;
         default:
             return ''; // Handle unknown question types
@@ -63,7 +63,7 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
             display: block;
             margin-bottom: 5px;
         }
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], input[type="date"] {
             width: 100%;
             padding: 8px;
             margin-bottom: 5px;
@@ -83,77 +83,119 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
             const questionDiv = document.createElement('div');
             questionDiv.className = 'form-group';
 
-            questionDiv.innerHTML = `
-                <label for="new-question-${questionCount}">New Question ${questionCount}:</label>
-                <input type="text" id="new-question-${questionCount}" name="newQuestions[${questionCount}][text]" required>
+            questionDiv.innerHTML = 
+                '<label for="new-question-' + questionCount + '">New Question ' + questionCount + ':</label>' +
+                '<input type="text" id="new-question-' + questionCount + '" name="newQuestions[' + questionCount + '][text]" required>' +
                 
-                <label for="new-question-type-${questionCount}">Question Type:</label>
-                <select id="new-question-type-${questionCount}" name="newQuestions[${questionCount}][type]" onchange="displayOptions(this, ${questionCount})" required>
-                    <option value="">Select Type</option>
-                    <option value="M">Multiple Choice</option>
-                    <option value="T">True or False</option>
-                    <option value="S">Short Answer (Fill-in-the-Blank)</option>
-                    <option value="F">Match</option>
-                </select>
+                '<label for="new-question-type-' + questionCount + '">Question Type:</label>' +
+                '<select id="new-question-type-' + questionCount + '" name="newQuestions[' + questionCount + '][type]" onchange="displayOptions(this, ' + questionCount + ')" required>' +
+                    '<option value="">Select Type</option>' +
+                    '<option value="M">Multiple Choice</option>' +
+                    '<option value="T">True or False</option>' +
+                    '<option value="S">Short Answer (Fill-in-the-Blank)</option>' +
+                    '<option value="F">Match</option>' +
+                '</select>' +
 
-                <label for="new-question-points-${questionCount}">Points:</label>
-                <input type="number" id="new-question-points-${questionCount}" name="newQuestions[${questionCount}][points]" required>
-        
+                '<label for="new-question-points-' + questionCount + '">Points:</label>' +
+                '<input type="number" id="new-question-points-' + questionCount + '" name="newQuestions[' + questionCount + '][points]" required>' +
 
-                <div id="options-new-${questionCount}" class="options-container"></div>
-            `;
+                '<div id="options-new-' + questionCount + '" class="options-container"></div>';
 
             questionsContainer.appendChild(questionDiv);
         }
 
         function displayOptions(selectElement, count) {
             const selectedType = selectElement.value;
-            const optionsContainer = document.getElementById(`options-new-${count}`);
+            const optionsContainer = document.getElementById('options-new-' + count);
             optionsContainer.innerHTML = '';
 
             if (selectedType === 'M') {
-                optionsContainer.innerHTML = `
-                    <label for="option1-${count}">Option 1:</label>
-                    <input type="text" id="option1-${count}" name="newQuestions[${count}][options][0]" required>
-                    <label for="option2-${count}">Option 2:</label>
-                    <input type="text" id="option2-${count}" name="newQuestions[${count}][options][1]" required>
-                    <label for="option3-${count}">Option 3:</label>
-                    <input type="text" id="option3-${count}" name="newQuestions[${count}][options][2]" required>
-                    <label for="option4-${count}">Option 4:</label>
-                    <input type="text" id="option4-${count}" name="newQuestions[${count}][options][3]" required>
+                optionsContainer.innerHTML = 
+                    '<label for="option1-' + count + '">Option 1:</label>' +
+                    '<input type="text" id="option1-' + count + '" name="newQuestions[' + count + '][options][0]" required>' +
+                    '<label for="option2-' + count + '">Option 2:</label>' +
+                    '<input type="text" id="option2-' + count + '" name="newQuestions[' + count + '][options][1]" required>' +
+                    '<label for="option3-' + count + '">Option 3:</label>' +
+                    '<input type="text" id="option3-' + count + '" name="newQuestions[' + count + '][options][2]" required>' +
+                    '<label for="option4-' + count + '">Option 4:</label>' +
+                    '<input type="text" id="option4-' + count + '" name="newQuestions[' + count + '][options][3]" required>' +
 
-                    <label for="correct-answer-${count}">Correct Answer:</label>
-                    <select id="correct-answer-${count}" name="newQuestions[${count}][correctAnswer]" required>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                        <option value="4">Option 4</option>
-                    </select>
-                `;
+                    '<label for="correct-answer-' + count + '">Correct Answer:</label>' +
+                    '<select id="correct-answer-' + count + '" name="newQuestions[' + count + '][correctAnswer]" required>' +
+                        '<option value="1">Option 1</option>' +
+                        '<option value="2">Option 2</option>' +
+                        '<option value="3">Option 3</option>' +
+                        '<option value="4">Option 4</option>' +
+                    '</select>';
             } else if (selectedType === 'T') {
-                optionsContainer.innerHTML = `
-                    <label for="boolean-${count}">Correct Answer (True/False):</label>
-                    <select id="boolean-${count}" name="newQuestions[${count}][correctAnswer]" required>
-                        <option value="T">True</option>
-                        <option value="F">False</option>
-                    </select>
-                `;
+                optionsContainer.innerHTML = 
+                    '<label for="boolean-' + count + '">Correct Answer (True/False):</label>' +
+                    '<select id="boolean-' + count + '" name="newQuestions[' + count + '][correctAnswer]" required>' +
+                        '<option value="T">True</option>' +
+                        '<option value="F">False</option>';
+                    '</select>';
             } else if (selectedType === 'S') {
-                optionsContainer.innerHTML = `
-                    <label for="fill-blank-${count}">Correct Answer:</label>
-                    <input type="text" id="fill-blank-${count}" name="newQuestions[${count}][correctAnswer]" required>
-                `;
+                optionsContainer.innerHTML = 
+                    '<label for="fill-blank-' + count + '">Correct Answer:</label>' +
+                    '<input type="text" id="fill-blank-' + count + '" name="newQuestions[' + count + '][correctAnswer]" required>';
             } else if (selectedType === 'F') {
                 for (let i = 1; i <= 10; i++) {
-                    optionsContainer.innerHTML += `
-                        <label for="match${i}-${count}">Match ${i}:</label>
-                        <input type="text" id="match${i}-${count}" name="newQuestions[${count}][match][${i - 1}]" ${i <= 4 ? 'required' : ''}>
+                    optionsContainer.innerHTML += 
+                        '<label for="match' + i + '-' + count + '">Match ' + i + ':</label>' +
+                        '<input type="text" id="match' + i + '-' + count + '" name="newQuestions[' + count + '][match][' + (i - 1) + ']" ' + (i <= 4 ? 'required' : '') + '>' +
                         
-                        <label for="m-ans${i}-${count}">Match Correct Answer ${i}:</label>
-                        <select id="m-ans${i}-${count}" name="newQuestions[${count}][m_Ans${i}]" ${i <= 4 ? 'required' : ''}>
-                            ${Array.from({ length: 10 }, (_, index) => `<option value="${index + 1}">Match ${index + 1}</option>`).join('')}
-                        </select>
-                    `;
+                        '<label for="m-ans' + i + '-' + count + '">Match Correct Answer ' + i + ':</label>' +
+                        '<select id="m-ans' + i + '-' + count + '" name="newQuestions[' + count + '][m_Ans' + i + ']" ' + (i <= 4 ? 'required' : '') + '>' +
+                            Array.from({ length: 10 }, (_, index) => '<option value="' + (index + 1) + '">Match ' + (index + 1) + '</option>').join('') +
+                        '</select>';
+                }
+            }
+        }
+
+        function displayExistingOptions(selectElement, questionID) {
+            const selectedType = selectElement.value;
+            const optionsContainer = document.getElementById('options-existing-' + questionID);
+            optionsContainer.innerHTML = '';
+
+            if (selectedType === 'M') {
+                optionsContainer.innerHTML = 
+                    '<label for="option1-' + questionID + '">Option 1:</label>' +
+                    '<input type="text" id="option1-' + questionID + '" name="questions[' + questionID + '][options][0]" required>' +
+                    '<label for="option2-' + questionID + '">Option 2:</label>' +
+                    '<input type="text" id="option2-' + questionID + '" name="questions[' + questionID + '][options][1]" required>' +
+                    '<label for="option3-' + questionID + '">Option 3:</label>' +
+                    '<input type="text" id="option3-' + questionID + '" name="questions[' + questionID + '][options][2]" required>' +
+                    '<label for="option4-' + questionID + '">Option 4:</label>' +
+                    '<input type="text" id="option4-' + questionID + '" name="questions[' + questionID + '][options][3]" required>' +
+
+                    '<label for="correct-answer-' + questionID + '">Correct Answer:</label>' +
+                    '<select id="correct-answer-' + questionID + '" name="questions[' + questionID + '][correctAnswer]" required>' +
+                        '<option value="1">Option 1</option>' +
+                        '<option value="2">Option 2</option>' +
+                        '<option value="3">Option 3</option>' +
+                        '<option value="4">Option 4</option>' +
+                    '</select>';
+            } else if (selectedType === 'T') {
+                optionsContainer.innerHTML = 
+                    '<label for="boolean-' + questionID + '">Correct Answer (True/False):</label>' +
+                    '<select id="boolean-' + questionID + '" name="questions[' + questionID + '][correctAnswer]" required>' +
+                        '<option value="T">True</option>' +
+                        '<option value="F">False</option>' +
+                    '</select>';
+            } else if (selectedType === 'S') {
+                optionsContainer.innerHTML = 
+                    '<label for="fill-blank-' + questionID + '">Correct Answer:</label>' +
+                    '<input type="text" id="fill-blank-' + questionID + '" name="questions[' + questionID + '][correctAnswer]" required>';
+            } else if (selectedType === 'F') {
+                for (let i = 1; i <= 10; i++) {
+                    optionsContainer.innerHTML += 
+                        '<label for="match' + i + '-' + questionID + '">Match ' + i + ':</label>' +
+                        '<input type="text" id="match' + i + '-' + questionID + '" name="questions[' + questionID + '][match][' + (i - 1) + ']" ' + (i <= 4 ? 'required' : '') + '>' +
+                        
+                        '<label for="m-ans' + i + '-' + questionID + '">Match Correct Answer ' + i + ':</label>' +
+                        '<select id="m-ans' + i + '-' + questionID + '" name="questions[' + questionID + '][m_Ans' + i + ']" ' + (i <= 4 ? 'required' : '') + '>' +
+                            Array.from({ length: 10 }, (_, index) => '<option value="' + (index + 1) + '">Match ' + (index + 1) + '</option>').join('') +
+                        '</select>';
                 }
             }
         }
@@ -162,14 +204,27 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
 <body>
     <h2>Edit Assessment</h2>
     <form action="update_assessment.php" method="post">
-        <input type="hidden" name="assessmentID" value="<?php echo $assessmentID; ?>">
+             <input type="hidden" name="assessmentID" value="<?php echo $assessmentID; ?>">
+
         <div class="form-group">
             <label for="assessmentName">Assessment Name:</label>
-            <input type="text" id="assessmentName" name="assessmentName" value="<?php echo htmlspecialchars($assessment['assessment_Name']); ?>" required>
+            <input type="text" id="assessmentName" name="assessmentName" value="<?php echo isset($assessment['assessment_Name']) ? htmlspecialchars($assessment['assessment_Name']) : ''; ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="assessmentDesc">Instructions:</label>
+            <input type="text" id="assessmentDesc" name="assessmentDesc" value="<?php echo isset($assessment['assessment_desc']) ? htmlspecialchars($assessment['assessment_desc']) : ''; ?>">
         </div>
         <div class="form-group">
             <label for="timeLimit">Time Limit (minutes):</label>
-            <input type="number" id="timeLimit" name="timeLimit" value="<?php echo htmlspecialchars($assessment['time_Limit']); ?>" required>
+            <input type="number" id="timeLimit" name="timeLimit" value="<?php echo isset($assessment['time_Limit']) ? htmlspecialchars($assessment['time_Limit']) : ''; ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="closingDate">Closing Date:</label>
+            <input type="datetime" id="closingDate" name="closingDate" value="<?php echo isset($assessment['closing_date']) ? htmlspecialchars($assessment['closing_date']) : ''; ?>">
+        </div>
+        <div class="form-group">
+            <label for="allowedAttempts">Allowed Attempt:</label> 
+            <input type="number" id="allowedAttempts" name="allowedAttempts" value="<?php echo isset($assessment['allowed_attempts']) ? htmlspecialchars($assessment['allowed_attempts']) : ''; ?>" required>
         </div>
         <div id="existing-questions-container">
             <?php while ($question = $resultQuestions->fetch_assoc()): ?>
@@ -235,3 +290,5 @@ function fetchCorrectAnswers($questionID, $questionType, $conn) {
     </form>
 </body>
 </html>
+
+
