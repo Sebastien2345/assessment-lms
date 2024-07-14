@@ -1,7 +1,7 @@
 <?php
 include "db.php";
 
-$query = "SELECT report_ID, user_ID, assessment_ID, grade, time_finished, attempts FROM student_reports";
+$query = "SELECT user_ID, assessment_ID, attempt_Number, score, grade, subject_Code, date FROM user_exam_report";
 $result = $conn->query($query);
 
 $reportDetails = array();
