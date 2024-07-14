@@ -6,12 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
             data.forEach(report => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${report.report_ID}</td>
                     <td>${report.user_ID}</td>
                     <td>${report.assessment_ID}</td>
+                    <td>${report.attempt_Number}</td>
+                    <td>${report.score}</td>
                     <td>${report.grade}</td>
-                    <td>${report.time_finished}</td>
-                    <td>${report.attempts}</td>
+                    <td>${report.subject_Code}</td>
+                    <td>${report.date}</td>
                     `;
                 reportDetails.appendChild(row);
             });
